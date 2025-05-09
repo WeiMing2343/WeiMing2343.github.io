@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="./ATEN-01.webp">
+    <title>賓果對獎</title>
+    <link type="text/css" rel="stylesheet" href="normalize.css" />
+    <link type="text/css" rel="stylesheet" href="bingo.css" />
+    <script type="text/javascript" src="bingo.js"></script>
+    <meta name="viewport" content="width=490, height=device-height, minimum-scale=0.1, maximum-scale=1.0, user-scalable=0">
+</head>
+<body>
+    <div id="root"></div>
+    <div id="controls">
+        <div>
+            <label for="width">寬度:</label>
+            <input type="number" id="width" min="1" max="10" value="5">
+        </div>
+        <div>
+            <label for="height">高度:</label>
+            <input type="number" id="height" min="1" max="10" value="5">
+        </div>
+        <div>
+            <label for="numbers">數字 (用空格分隔):</label>
+            <input type="text" id="numbers" placeholder="例如: 5 15 26 48 31">
+        </div>
+        <button onclick="generateCustomCard()">生成卡片</button>
+    </div>
+    <button class='okButton' onclick='confirmAddAllCards()'>完成所有卡片</button>
+    <button class='delAllButton' onclick='clearCard()'>刪除所有卡片</button>
+    <div id='home'></div>
+    <footer class="footer">
+        <img src="./ATEN-02.jpg" class='aten'>
+    </footer>
+
+    <script>
+        function generateCustomCard() {
+            const width = parseInt(document.getElementById('width').value) || 5;
+            const height = parseInt(document.getElementById('height').value) || 5;
+            const numbersInput = document.getElementById('numbers').value;
+            const numbers = numbersInput.split(' ').map(n => n.trim()).filter(n => n);
+            
+            if (numbers.length !== width * height && numbersInput.trim() !== '') {
+                alert(`請輸入 ${width * height} 個數字`);
+                return;
+            }
+
+            let currentPreviewCard = {}; // Local object for the card being generated
+            currentPreviewCard.value = Array(height).fill().map(() => Array(width).fill(''));
+
+            if (numbers.length > 0) {
+                let index = 0;
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        currentPreviewCard.value[y][x] = numbers[index++] || '';
+                    }
+                }
+            }
+
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'cardContainer new';
+            cardContainer.style.width = (width * 45) + 'px';
+            cardContainer.style.height = (height * 45 + 50) + 'px';
+            homeDiv.appendChild(cardContainer);
+            currentPreviewCard.rootNode = cardContainer; // Store the DOM element
+
+            currentPreviewCard.bingoNums = [];
+
+            const cardTitle = document.createElement('input');
+            cardTitle.type = 'number';
+            cardTitle.className = 'cardTitleInput';
+            cardTitle.style.width = (width * 45 - 4) + 'px';
+            // Assign a temporary ID or retrieve it later in confirmAddAllCards
+            cardTitle.value = padLeft(cards.length + previewCards.length + 1, 4); 
+            currentPreviewCard.cardTitleInput = cardTitle; // Store the input element itself
+            cardContainer.appendChild(cardTitle);
+
+
+            for (let y = 0; y < height; y++) {
+                currentPreviewCard.bingoNums.push([]);
+                for (let x = 0; x < width; x++) {
+                    const bingoNum = document.createElement('div');
+                    // Generic color class assignment
+                    const colorIndex = (y + x) % 5; // Cycle through 5 colors
+                    let colorClass = '';
+                    switch (colorIndex) {
+                        case 0: colorClass = 'bng-pink'; break;
+                        case 1: colorClass = 'bng-green'; break;
+                        case 2: colorClass = 'bng-purple'; break;
+                        case 3: colorClass = 'bng-orange'; break;
+                        case 4: colorClass = 'bng-blue'; break;
+                    }
+                    bingoNum.className = 'bingoNum ' + colorClass;
+                    bingoNum.innerText = currentPreviewCard.value[y][x] || '--';
+                    cardContainer.appendChild(bingoNum);
+                    currentPreviewCard.bingoNums[y].push(bingoNum);
+                }
+            }
+            
+            previewCards.push(currentPreviewCard); // Add to the array of preview cards
+            cardTitle.focus();
+        }
+
+        homeDiv = document.getElementById('home');
+        rootDiv = document.getElementById('root');
+        var previewCards = []; // Array to store preview cards
+        var cards = [];
+        var newCard = false; // Initialize newCard globally
+        function loadCard() {
+		console.log("loadCard called. Current cards before read:", JSON.parse(JSON.stringify(cards)));
+		readCardsFromLocal();
+		console.log("After readCardsFromLocal. Cards:", JSON.parse(JSON.stringify(cards)));
+		console.log("Cards length:", cards.length);
+
+		if (cards.length > 0) {
+			console.log("Cards found, creating UI.");
+			createBingoBall();
+			createBingoCard();
+
+			bingoBallSelect('free');
+		} else {
+			console.log("No cards found or cards array is empty. UI not created.");
+		}
+	}
+
+	function saveCard() {
+		saveCardToLocal();
+	}
+
+	function clearCard() {
+
+		var answer = confirm('吃飽稱著 ?');
+		if (answer) {
+			setData("CARDS", "");
+
+			location.reload();
+		}
+	}
+
+	loadCard();
+    </script>
+</body>
+</html>
