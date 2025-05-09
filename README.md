@@ -1,6 +1,6 @@
 # 線上賓果對獎程式
 
-https://jiahaoChen.github.io
+https://WeiMing2343.github.io/
 
 - 自定賓果卡內容
 - 自動對獎
