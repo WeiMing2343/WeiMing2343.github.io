@@ -199,8 +199,8 @@ body{
 .footer { /* This will now style the <a> tag wrapping the image */
     position: fixed;
     top: 10px; /* Same as theme-toggle */
-    right: 50px;  /* Positioned to the left of theme-toggle (assuming theme-toggle is ~40px wide with padding) */
-    z-index: 1000; 
+    right: 60px;  /* Increased offset from theme-toggle */
+    z-index: 999; /* Slightly lower z-index than theme-toggle, just in case */
     display: block; /* Good for positioning an <a> tag */
 }
 
@@ -447,7 +447,7 @@ footer.footer {
     }
     .footer { /* Ensure it stays top-right on mobile too, adjust 'right' if needed to avoid overlap */
         top: 10px;
-        right: 50px; /* Keep consistent or adjust if theme toggle size changes on mobile */
+        right: 60px; /* Keep consistent or adjust if theme toggle size changes on mobile */
         /* Remove bottom and left positioning from previous mobile style */
     }
 }
