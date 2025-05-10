@@ -5,11 +5,13 @@
     <link rel="icon" href="./bingo.webp">
     <title>賓果對獎</title>
     <link type="text/css" rel="stylesheet" href="normalize.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link type="text/css" rel="stylesheet" href="bingo.css" />
     <script type="text/javascript" src="bingo.js"></script>
     <meta name="viewport" content="width=490, height=device-height, minimum-scale=0.1, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
+    <h1>Bingo 快速兌獎系統</h1>
     <div id="particles-js"></div> <!-- particles.js container -->
     <div id="root"></div>
     <div id="controls">
@@ -26,11 +28,12 @@
             <input type="text" id="numbers" placeholder="例如: 5 15 X 48 31">
         </div>
         <div style="font-size: 0.8em; color: #555; text-align: center; margin-top: -5px; margin-bottom: 10px;">
-            (提示: 輸入 'X' 可作為任意數字)
+            提示:數字填入可以先使用google 智慧相機將數值複製並貼上,輸入 'X' 可作為任意數字
         </div>
-        <button onclick="generateCustomCard()">生成卡片</button>
+        <button onclick="generateCustomCard()">生成卡片<img src="https://static.thenounproject.com/png/paw-icon-5554867-512.png" class="cat-paw-img" alt="Cat Paw"></button>
     </div>
-    <button class='okButton' onclick='confirmAddAllCards()'>完成所有卡片</button>
+    <button id="theme-toggle"><i class="fas fa-moon"></i></button> 
+    <button class='okButton' onclick='confirmAddAllCards()'>完成所有卡片<span class="dog-paw"></span></button>
     <button class='delAllButton' onclick='clearCard()'>刪除所有卡片</button>
     
     <div id="main-content-area">
@@ -166,6 +169,157 @@
 	
 	// Initialize panel variables after DOM is loaded
 	document.addEventListener('DOMContentLoaded', (event) => {
+        const generateCardButton = document.querySelector('#controls button[onclick="generateCustomCard()"]');
+        const catPawImg = generateCardButton ? generateCardButton.querySelector('.cat-paw-img') : null;
+
+        const lightModePawSrc = 'https://static.thenounproject.com/png/paw-icon-7534296-512.png'; // Updated
+        const darkModePawSrc = 'https://static.thenounproject.com/png/paw-icon-7534291-512.png'; // Updated
+
+        if (generateCardButton && catPawImg) {
+            generateCardButton.addEventListener('mousemove', (e) => {
+                const rect = generateCardButton.getBoundingClientRect();
+                const x = e.clientX - rect.left; // x position within the button.
+                const y = e.clientY - rect.top;  // y position within the button.
+
+                const buttonWidth = rect.width;
+                const buttonHeight = rect.height;
+
+                // Determine which edge the mouse is closest to
+                const proximityToLeft = x;
+                const proximityToRight = buttonWidth - x;
+                const proximityToTop = y;
+                const proximityToBottom = buttonHeight - y;
+
+                const minProximity = Math.min(proximityToLeft, proximityToRight, proximityToTop, proximityToBottom);
+
+                // Reset styles
+                catPawImg.style.left = 'auto';
+                catPawImg.style.right = 'auto';
+                catPawImg.style.top = 'auto';
+                catPawImg.style.bottom = 'auto';
+                catPawImg.style.transform = 'scale(1.1)'; // Base hover scale
+
+                if (minProximity === proximityToTop) {
+                    catPawImg.style.top = '-15px'; 
+                    catPawImg.style.left = (buttonWidth / 2) - (catPawImg.offsetWidth / 2) + 'px';
+                    catPawImg.style.transform += ' rotate(180deg)';
+                } else if (minProximity === proximityToBottom) {
+                    catPawImg.style.bottom = '-15px'; 
+                    catPawImg.style.left = (buttonWidth / 2) - (catPawImg.offsetWidth / 2) + 'px';
+                    catPawImg.style.transform += ' rotate(0deg)';
+                } else if (minProximity === proximityToLeft) {
+                    catPawImg.style.left = '-15px'; 
+                    catPawImg.style.top = (buttonHeight / 2) - (catPawImg.offsetHeight / 2) + 'px';
+                    catPawImg.style.transform += ' rotate(90deg)';
+                } else { // proximityToRight
+                    catPawImg.style.right = '-15px'; 
+                    catPawImg.style.top = (buttonHeight / 2) - (catPawImg.offsetHeight / 2) + 'px';
+                    catPawImg.style.transform += ' rotate(-90deg)';
+                }
+                catPawImg.style.opacity = '1';
+            });
+
+            generateCardButton.addEventListener('mouseleave', () => {
+                catPawImg.style.opacity = '0';
+                // Reset to initial CSS defined state, JS will set correct src on next hover via applyTheme or theme toggle
+                catPawImg.style.bottom = '-15px'; 
+                catPawImg.style.right = '-15px'; 
+                catPawImg.style.left = 'auto';
+                catPawImg.style.top = 'auto';
+                catPawImg.style.transform = 'rotate(-30deg) scale(1)';
+            });
+        }
+
+        const okButton = document.querySelector('button.okButton'); // Simpler selector
+        const dogPaw = okButton ? okButton.querySelector('.dog-paw') : null;
+
+        if (okButton && dogPaw) {
+            okButton.addEventListener('mousemove', (e) => {
+                const rect = okButton.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const buttonWidth = rect.width;
+                const buttonHeight = rect.height;
+
+                const proximityToLeft = x;
+                const proximityToRight = buttonWidth - x;
+                const proximityToTop = y;
+                const proximityToBottom = buttonHeight - y;
+                const minProximity = Math.min(proximityToLeft, proximityToRight, proximityToTop, proximityToBottom);
+
+                dogPaw.style.left = 'auto';
+                dogPaw.style.right = 'auto';
+                dogPaw.style.top = 'auto';
+                dogPaw.style.bottom = 'auto';
+                dogPaw.style.transform = 'scale(1.1)'; // Base hover scale for dog paw
+
+                // Corrected Dog Paw Positioning
+                const dogPawOffsetHeight = dogPaw.offsetHeight || 28; // Use default if offsetHeight is 0 initially
+                const dogPawOffsetWidth = dogPaw.offsetWidth || 32;
+
+                if (minProximity === proximityToTop) {
+                    dogPaw.style.top = `-${dogPawOffsetHeight * 0.6}px`; // Adjust peek amount
+                    dogPaw.style.left = (buttonWidth / 2) - (dogPawOffsetWidth / 2) + 'px';
+                    dogPaw.style.transform += ' rotate(180deg)';
+                } else if (minProximity === proximityToBottom) {
+                    dogPaw.style.bottom = `-${dogPawOffsetHeight * 0.6}px`;
+                    dogPaw.style.left = (buttonWidth / 2) - (dogPawOffsetWidth / 2) + 'px';
+                    dogPaw.style.transform += ' rotate(0deg)';
+                } else if (minProximity === proximityToLeft) {
+                    dogPaw.style.left = `-${dogPawOffsetWidth * 0.6}px`;
+                    dogPaw.style.top = (buttonHeight / 2) - (dogPawOffsetHeight / 2) + 'px';
+                    dogPaw.style.transform += ' rotate(90deg)';
+                } else { // proximityToRight
+                    dogPaw.style.right = `-${dogPawOffsetWidth * 0.6}px`;
+                    dogPaw.style.top = (buttonHeight / 2) - (dogPawOffsetHeight / 2) + 'px';
+                    dogPaw.style.transform += ' rotate(-90deg)';
+                }
+                dogPaw.style.opacity = '1';
+            });
+
+            okButton.addEventListener('mouseleave', () => {
+                dogPaw.style.opacity = '0';
+                // Reset to initial CSS defined state for dog paw
+                dogPaw.style.bottom = '-18px'; 
+                dogPaw.style.right = '-12px';
+                dogPaw.style.left = 'auto';
+                dogPaw.style.top = 'auto';
+                dogPaw.style.transform = 'rotate(-25deg) scale(1)';
+            });
+        }
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Function to apply the stored theme or default to light
+        const applyTheme = () => {
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'; 
+                if (catPawImg) catPawImg.src = darkModePawSrc;
+            } else {
+                body.classList.remove('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'; 
+                if (catPawImg) catPawImg.src = lightModePawSrc;
+            }
+        };
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                if (catPawImg) catPawImg.src = darkModePawSrc;
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                if (catPawImg) catPawImg.src = lightModePawSrc;
+            }
+        });
+
+        applyTheme(); // Apply theme on initial load
+
 		bingoNumbersPanelDiv = document.getElementById('bingo-numbers-panel');
 		cardsPanelDiv = document.getElementById('cards-panel');
 		completedCardsPanelDiv = document.getElementById('completed-cards-panel');

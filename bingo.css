@@ -1,5 +1,6 @@
 body{
-	font-family:arial,sans-serif;
+	font-family: "Microsoft JhengHei", arial, sans-serif;
+	font-weight: bold;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -166,8 +167,13 @@ body{
 	font-size: 25px;
 	border: 2px solid #5050c0; /* Outline */
 	cursor: pointer;
-	transition: background-color 0.3s ease, border-color 0.3s ease;
+	transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease-out;
 	border-radius: 25px; /* Oval shape */
+    position: relative; /* Ensure this is set for dog paw positioning */
+    overflow: visible; /* Allow paw to peek out */
+}
+.okButton:active {
+    transform: scale(0.95); /* Button press effect */
 }
 .okButton:hover {
 	background-color: #6060d0; /* Darker blue on hover */
@@ -280,7 +286,7 @@ body{
 #controls label {
     min-width: 100px; /* Reduced min-width to give more space to input */
     text-align: right;
-    font-size: 0.9em; /* Slightly smaller font for labels if needed */
+    font-size: 1.2em; /* Increased font size for labels */
 }
 
 #controls input[type="number"],
@@ -301,25 +307,90 @@ body{
 }
 
 #controls button {
-    align-self: center; /* 將按鈕對齊到容器中心 */
-    padding: 10px 20px; /* Increased padding */
-    background-color: #4CAF50; /* Green */
+    align-self: center;
+    padding: 10px 20px;
+    background-color: #4CAF50;
     color: white;
-    border: 2px solid #388E3C; /* Outline */
-    border-radius: 20px; /* Oval shape */
+    border: 2px solid #388E3C;
+    border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     font-size: 1em;
-}
-#controls button:hover {
-	background-color: #45a049; /* Darker green */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    border-color: #2E7D32; /* Darker outline on hover */
+    position: relative; /* For positioning the paw */
+    overflow: visible; /* Allow paw to peek out */
+    transition: transform 0.2s ease-out; /* For a slight button press effect on click */
 }
 
+#controls button:active {
+    transform: scale(0.95); /* Button press effect */
+}
+
+/* Cat Paw Image Styles */
+#controls button .cat-paw-img {
+    position: absolute;
+    width: 45px; /* Increased size */
+    height: 45px; /* Increased size */
+    bottom: -20px; /* Adjusted for larger size */
+    right: -20px; /* Adjusted for larger size */
+    opacity: 0;
+    transition: bottom 0.3s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, left 0.3s ease-out, right 0.3s ease-out, top 0.3s ease-out;
+    pointer-events: none;
+    transform: rotate(-30deg) scale(1); /* Initial state */
+    /* remove background-color and border-radius if using an image */
+}
+
+/* No ::before or ::after needed if using an image for cat paw */
+
+#controls button:hover .cat-paw-img { /* Ensure this targets the image class */
+    opacity: 1;
+    /* Dynamic positioning will be handled by JS, but set a default hover state if needed */
+    /* Example: bottom: -5px; transform: rotate(-15deg) scale(1.1); */
+}
+
+/* Dog Paw Styles */
+.okButton .dog-paw { /* Target dog-paw within okButton */
+    position: absolute;
+    width: 32px; 
+    height: 28px;
+    /* Initial position set to be clearly off-button, JS will handle dynamic placement */
+    bottom: -25px;  /* Default hidden position */
+    right: -20px;   /* Default hidden position */
+    background-color: #c0a080; 
+    border-radius: 45% 45% 50% 50% / 60% 60% 40% 40%; 
+    transform: rotate(-25deg) scale(1); 
+    opacity: 0;
+    /* Ensure all transformed/positioned properties are transitioned */
+    transition: bottom 0.3s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, left 0.3s ease-out, right 0.3s ease-out, top 0.3s ease-out;
+    pointer-events: none;
+}
+
+.okButton .dog-paw::before,
+.okButton .dog-paw::after { /* Dog Toes */
+    content: '';
+    position: absolute;
+    width: 9px; /* Slightly larger toes */
+    height: 9px;
+    background-color: #a08060; /* Darker toe color */
+    border-radius: 50%;
+    top: 4px; /* Adjusted for potentially larger paw base */
+}
+
+.okButton .dog-paw::before {
+    left: 5px; /* Adjusted for potentially larger paw base */
+}
+
+.okButton .dog-paw::after {
+    left: 18px; /* Adjusted for potentially larger paw base */
+}
+
+.okButton:hover .dog-paw { /* Ensure this targets the dog-paw within okButton */
+    opacity: 1;
+    /* Dynamic positioning will be handled by JS, but set a default hover state if needed */
+     /* Example: bottom: -8px; transform: rotate(-10deg) scale(1.1); */
+}
+
+
 .okButton, .delAllButton {
-    position: relative; /* 修改為相對定位，避免覆蓋其他元素 */
-    margin-top: 10px;
+    margin: 10px 5px; /* Add top/bottom and left/right margin */
 }
 
 footer.footer {
@@ -363,3 +434,183 @@ footer.footer {
         width: 15%; /* Adjust image size for mobile if needed */
     }
 }
+
+/* Theme Toggle Button Styles */
+#theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5em; /* Adjust size as needed */
+    cursor: pointer;
+    color: black; /* Moon icon color in light mode */
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode #particles-js {
+    /* Optional: Adjust particles for dark mode if needed */
+}
+
+body.dark-mode .bingoBtn {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+body.dark-mode .bingoBtn:hover {
+    background-color: #444;
+}
+body.dark-mode .bingoBtn.on {
+    background-color: #555; /* Adjusted 'on' state for dark mode */
+    color: #fff;
+}
+
+body.dark-mode .cardContainer {
+    border-color: #007bff; /* Brighter blue for dark mode */
+}
+body.dark-mode .cardContainer.on {
+    border-color: #ff4500; /* Brighter red for dark mode */
+}
+
+body.dark-mode .cardTitleInput {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-mode .modeText {
+    color: #6495ed; /* Lighter blue for dark mode */
+}
+body.dark-mode .modeText.red {
+    color: #ff7f7f; /* Lighter red for dark mode */
+}
+
+body.dark-mode .cardTitle {
+    background-color: #444;
+    color: #e0e0e0;
+}
+body.dark-mode .cardTitle.lv1 {
+    background-color: #4a5eb9; /* Adjusted lv1 for dark mode */
+}
+body.dark-mode .cardTitle.lv2 {
+    background-color: #d96518; /* Adjusted lv2 for dark mode */
+}
+body.dark-mode .cardTitle.on {
+    background-color: #cc3030; /* Adjusted 'on' title for dark mode */
+    color: #fff;
+}
+
+body.dark-mode .cardContainer .bingoNum {
+    color: #e0e0e0;
+}
+body.dark-mode .cardContainer .bingoNum.go {
+    background-color: #cc3030; /* Adjusted BINGO state for dark mode */
+    color: #fff;
+}
+body.dark-mode .cardContainer .bingoNum.wildcard {
+	background-color: #4a4a00 !important; /* Darker yellow for wildcard in dark mode */
+	color: #f0f0f0 !important;
+	border-color: #880 !important;
+}
+
+/* Dark mode for bng-color borders and .on backgrounds */
+body.dark-mode .cardContainer .bingoNum.bng-pink { border-color: #e8529c; }
+body.dark-mode .cardContainer .bingoNum.bng-pink.on { background-color: #573240; }
+
+body.dark-mode .cardContainer .bingoNum.bng-green { border-color: #5ca857; }
+body.dark-mode .cardContainer .bingoNum.bng-green.on { background-color: #2c4827; }
+
+body.dark-mode .cardContainer .bingoNum.bng-purple { border-color: #9b8bc5; }
+body.dark-mode .cardContainer .bingoNum.bng-purple.on { background-color: #3b2b55; }
+
+body.dark-mode .cardContainer .bingoNum.bng-orange { border-color: #eda644; }
+body.dark-mode .cardContainer .bingoNum.bng-orange.on { background-color: #5d3619; }
+
+body.dark-mode .cardContainer .bingoNum.bng-blue { border-color: #297fca; }
+body.dark-mode .cardContainer .bingoNum.bng-blue.on { background-color: #19355b; }
+
+
+body.dark-mode .cardContainer .delButton {
+    background-color: #c06060; /* Darker red for delete button */
+    color: #fff;
+}
+body.dark-mode .cardContainer .delButton:hover {
+    background-color: #a04040;
+}
+
+body.dark-mode .okButton {
+    background-color: #6060c0;
+    border-color: #4040a0;
+    color: #fff;
+}
+body.dark-mode .okButton:hover {
+    background-color: #5050b0;
+    border-color: #303090;
+}
+
+body.dark-mode .delAllButton {
+    background-color: #c07070;
+    border-color: #a05050;
+    color: #fff;
+}
+body.dark-mode .delAllButton:hover {
+    background-color: #b06060;
+    border-color: #904040;
+}
+
+body.dark-mode #controls {
+    background-color: rgba(30, 30, 30, 0.85);
+    border-color: #444;
+}
+body.dark-mode #controls div {
+    border-color: #333;
+}
+body.dark-mode #controls div:hover {
+    border-color: #666;
+}
+body.dark-mode #controls label {
+    color: #d0d0d0;
+}
+body.dark-mode #controls input[type="number"],
+body.dark-mode #controls input[type="text"] {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border-color: #555;
+}
+body.dark-mode #controls input[type="number"]:focus,
+body.dark-mode #controls input[type="text"]:focus {
+    border-color: #3CB371; /* MediumSeaGreen for focus in dark mode */
+    box-shadow: 0 0 5px rgba(60, 179, 113, 0.5);
+}
+
+body.dark-mode #controls button {
+    background-color: #3CB371; /* MediumSeaGreen */
+    border-color: #2E8B57; /* SeaGreen */
+    color: #fff;
+}
+body.dark-mode #controls button:hover {
+    background-color: #36a265;
+    border-color: #287a4f;
+}
+
+body.dark-mode #theme-toggle {
+    color: white; /* Sun icon color in dark mode */
+    background: none; /* Ensure no background in dark mode */
+    border: none; /* Ensure no border in dark mode */
+}
+body.dark-mode #theme-toggle:hover {
+    /* Optional: Add a subtle hover effect if desired, e.g., opacity change */
+    opacity: 0.8;
+}
+
+/* Ensure particles.js line color is visible in dark mode */
+body.dark-mode .particles-js-canvas-el {
+    /* This might require adjusting particles.js config if lines are still dark */
+}
+/* If particles.js config cannot be changed dynamically, you might need two configs or adjust line_linked.color in JS */

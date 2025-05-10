@@ -109,8 +109,34 @@ function bingoBallSelect(ball){
 				card.booleans[y][x] = true;
 			}
 		}
-		checkBingoLine(card);
+		// checkBingoLine(card); // Call will be made after updating all cards
 	}
+
+    let winningCardsInfo = [];
+    for(var idx = 0 ; idx < cards.length ; idx++){
+        var card = cards[idx];
+        var lines = checkBingoLine(card); // checkBingoLine now returns the number of lines
+        if (lines >= 3) {
+            winningCardsInfo.push(card.no);
+            // Visual updates for bingo are still handled in checkBingoLine
+        }
+    }
+
+    if (winningCardsInfo.length > 0) {
+        setTimeout(function(){
+            alert("！！！賓果！！！\n卡片號碼: " + winningCardsInfo.join(', ') + "\n記得請WeiMing喝飲料!");
+            // Move winning cards to completed panel
+            winningCardsInfo.forEach(cardNo => {
+                const winningCard = cards.find(c => c.no === cardNo);
+                if (winningCard && completedCardsPanelDiv && winningCard.rootNode) {
+                    // Check if the card is not already in the completed panel to avoid moving it again
+                    if (winningCard.rootNode.parentNode !== completedCardsPanelDiv) {
+                        completedCardsPanelDiv.appendChild(winningCard.rootNode);
+                    }
+                }
+            });
+        }, 500);
+    }
 }
 
 function bingoBallUnSelect(ball){
@@ -253,14 +279,15 @@ function checkBingoLine(card) {
                     }
                 }
             }
-            setTimeout(function(){
-                alert("！！！賓果！！！\n記得請WeiMing喝飲料!");
-            }, 500);
+            // Alert and card movement will be handled by the caller (bingoBallSelect)
+            // setTimeout(function(){
+            //     alert("！！！賓果！！！\n記得請WeiMing喝飲料!");
+            // }, 500);
 
-            // Move the card to the completed panel
-            if (completedCardsPanelDiv && card.rootNode) {
-                completedCardsPanelDiv.appendChild(card.rootNode);
-            }
+            // // Move the card to the completed panel
+            // if (completedCardsPanelDiv && card.rootNode) {
+            //     completedCardsPanelDiv.appendChild(card.rootNode);
+            // }
 
         } else { // Not a "Bingo!" (less than 3 lines)
             card.rootNode.className = 'cardContainer'; // Default container class
@@ -298,6 +325,7 @@ function checkBingoLine(card) {
             }
         }
     }
+    return line; // Return the number of lines found
 }
 
 function createBingoCard() {
