@@ -204,7 +204,7 @@ body{
 }
 
 .footer img {
-    margin: auto;
+    /* margin: auto; */ /* Removed for better control */
 }
 
 .aten {
@@ -446,7 +446,11 @@ footer.footer {
     }
 
     .aten {
-        width: 15%; /* Adjust image size for mobile if needed */
+        width: 50px; /* Example fixed width, adjust as needed */
+        height: auto;
+        display: block;
+        margin-left: auto; /* Push to the right within its container */
+        margin-right: 0;   /* Align to the very right of its container */
     }
 }
 
