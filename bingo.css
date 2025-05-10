@@ -199,18 +199,26 @@ body{
 .footer {
     position: fixed;
     bottom: 0;
+    left: 0; /* Ensure it spans from the left edge */
     width: 100%;
-    text-align: right;
+    text-align: right; /* Aligns inline/inline-block children (like the <a> tag) to the right */
+    padding: 8px;    /* Adds spacing around the content within the footer */
+    box-sizing: border-box; /* Ensures padding is included within the 100% width */
+    z-index: 999; /* Places footer above most content, but potentially below high-z-index items like modals or the theme toggle */
 }
 
 .footer img {
-    /* margin: auto; */ /* Removed for better control */
+    /* This rule is less specific than .aten. Styles for the image are best placed in .aten */
 }
 
-.aten {
-    width: 5%;
-    height: auto;
-
+.aten { /* This class is directly on the <img> tag */
+    /* General/Desktop styles */
+    max-width: 60px;  /* Sets a maximum width for the image */
+    width: 5vw;       /* Sets width to 5% of the viewport width, making it responsive */
+    min-width: 30px;  /* Sets a minimum width, ensuring it doesn't become too small */
+    height: auto;     /* Maintains aspect ratio */
+    display: inline-block; /* Allows width/height to be set, and respects text-align of parent */
+    vertical-align: middle; /* Better vertical alignment if other inline content were present */
 }
 
 /* #home is no longer the main flex container for cards/numbers */
@@ -446,11 +454,10 @@ footer.footer {
     }
 
     .aten {
-        width: 50px; /* Example fixed width, adjust as needed */
-        height: auto;
-        display: block;
-        margin-left: auto; /* Push to the right within its container */
-        margin-right: 0;   /* Align to the very right of its container */
+        /* Mobile-specific styles */
+        width: 45px; /* Overrides general width to a fixed size for mobile */
+        /* Inherits display: inline-block, vertical-align: middle, height: auto, etc. from general .aten styles */
+        /* max-width and min-width from general rules will also apply if 45px falls outside that range, though unlikely here. */
     }
 }
 
