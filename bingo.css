@@ -196,18 +196,21 @@ body{
     border-color: #b05050; /* Darker outline on hover */
 }
 
-.footer { /* This will now style the <a> tag wrapping the image */
+.footer {
     position: fixed;
-    top: 10px; /* Same as theme-toggle */
-    right: 60px;  /* Increased offset from theme-toggle */
-    z-index: 999; /* Slightly lower z-index than theme-toggle, just in case */
-    display: block; /* Good for positioning an <a> tag */
+    bottom: 0;
+    width: 100%;
+    text-align: right;
 }
 
-.footer img.aten { 
-    width: 30px; /* Adjust size as needed for top-right corner */
+.footer img {
+    margin: auto;
+}
+
+.aten {
+    width: 5%;
     height: auto;
-    display: block; /* Helps with some layout quirks of images in links */
+
 }
 
 /* #home is no longer the main flex container for cards/numbers */
@@ -442,13 +445,8 @@ footer.footer {
         width: 90%; /* Make controls wider on mobile */
     }
 
-    .aten { /* This class is on the img inside the footer link */
-        width: 30px; /* Consistent size for mobile */
-    }
-    .footer { /* Ensure it stays top-right on mobile too, adjust 'right' if needed to avoid overlap */
-        top: 10px;
-        right: 60px; /* Keep consistent or adjust if theme toggle size changes on mobile */
-        /* Remove bottom and left positioning from previous mobile style */
+    .aten {
+        width: 15%; /* Adjust image size for mobile if needed */
     }
 }
 
@@ -597,23 +595,6 @@ body.dark-mode #controls label {
 body.dark-mode #controls input[type="number"],
 body.dark-mode #controls input[type="text"],
 body.dark-mode #controls select { /* Dark mode for select */
-    background-color: #2c2c2c;
-    color: #e0e0e0;
-    border-color: #555;
-}
-body.dark-mode #controls input[type="number"]:focus,
-body.dark-mode #controls input[type="text"]:focus,
-body.dark-mode #controls select:focus { /* Dark mode for select focus */
-    border-color: #3CB371; /* MediumSeaGreen for focus in dark mode */
-    box-shadow: 0 0 5px rgba(60, 179, 113, 0.5);
-}
-
-body.dark-mode #controls button {
-    background-color: #3CB371; /* MediumSeaGreen */
-    border-color: #2E8B57; /* SeaGreen */
-    color: #fff;
-}
-body.dark-mode #controls button:hover {
     background-color: #36a265;
     border-color: #287a4f;
 }
