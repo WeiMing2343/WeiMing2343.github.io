@@ -198,19 +198,17 @@ body{
 
 .footer {
     position: fixed;
-    bottom: 0;
-    width: 100%;
-    text-align: right;
+    bottom: 10px; /* Adjusted for padding from edge */
+    right: 10px;  /* Adjusted for padding from edge */
+    z-index: 999; /* Below theme toggle but above most content */
+    /* width: auto; Remove fixed width to allow content to size it */
+    /* text-align: right; No longer needed if positioned absolutely */
 }
 
-.footer img {
-    margin: auto;
-}
-
-.aten {
-    width: 5%;
+.footer img.aten { /* More specific selector for the image */
+    width: 50px; /* Fixed size for better control, adjust as needed */
     height: auto;
-
+    display: block; /* Helps with some layout quirks of images in links */
 }
 
 /* #home is no longer the main flex container for cards/numbers */
@@ -446,7 +444,12 @@ footer.footer {
     }
 
     .aten {
-        width: 15%; /* Adjust image size for mobile if needed */
+        width: 40px; /* Slightly smaller for mobile, adjust as needed */
+    }
+    .footer { /* Adjust footer position for mobile if needed */
+        bottom: 10px;
+        left: 10px; /* Move to bottom-left on mobile */
+        right: auto; /* Remove right positioning */
     }
 }
 
