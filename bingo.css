@@ -1,5 +1,22 @@
 body{
 	font-family:arial,sans-serif;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-height: 100vh;
+	margin: 0;
+	background-color: #fff; /* Set base background to white */
+	position: relative; /* Needed for z-indexed children like particles.js canvas */
+}
+
+/* Styles for particles.js container */
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Place it behind all other content */
 }
 
 .bingoBtn{
@@ -9,16 +26,20 @@ body{
 	height: 45px;
 	background-color: white;
 	border:1px solid gray;
+	transition: background-color 0.3s ease, color 0.3s ease; /* For hover effect */
+}
+.bingoBtn:hover{
+	background-color: #f0f0f0; /* Light gray for hover */
 }
 .bingoBtn.on{
 	color:white;
-	background-color: #666;
+	background-color: #333; /* Darker gray for better contrast */
 }
 .cardContainer{
 	width: 225px;
 	height:245px;
 	border:1px solid blue;
-	float:left;
+	/* float:left; */ /* Removed float for flex centering */
 	margin: 3px;
 	position:relative;
 }
@@ -97,6 +118,13 @@ body{
 	background-color: #FF4040; /* This is for BINGO state, keep as is */
 }
 
+.cardContainer .bingoNum.wildcard {
+	background-color: #ffff99 !important; /* Light yellow for wildcard, !important to override other .on states */
+	color: #333 !important; /* Dark text for readability on yellow */
+	font-weight: bold;
+	border-color: #cc0 !important; /* Darker yellow border */
+}
+
 /* Generic color group styling */
 .cardContainer .bingoNum.bng-pink { border-color: #c8327c; /*pink*/ }
 .cardContainer .bingoNum.bng-pink.on { background-color: #d7b2c0; /*pink*/ }
@@ -122,27 +150,44 @@ body{
 	height:20px;
 	border-width: 0px;
 	background-color:#f08080;
-
+	color: white;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+.cardContainer .delButton:hover {
+	background-color: #d06060; /* Darker red on hover */
 }
 
 .okButton {
 	width: 200px;
 	height: 50px;
 	background-color: #8080f0;
+	color: white;
 	font-size: 25px;
-	position: fixed;
-	left: 0;
-	top: 0;
+	border: 2px solid #5050c0; /* Outline */
+	cursor: pointer;
+	transition: background-color 0.3s ease, border-color 0.3s ease;
+	border-radius: 25px; /* Oval shape */
+}
+.okButton:hover {
+	background-color: #6060d0; /* Darker blue on hover */
+	border-color: #3030a0; /* Darker outline on hover */
 }
 
 .delAllButton {
     width: 90px;
     height: 50px;
     background-color: #f08080;
+    color: white;
     font-size: 12px;
-    position: fixed;
-    right: 5px;
-    top: 0;
+    border: 2px solid #d06060; /* Outline */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+	border-radius: 25px; /* Oval shape */
+}
+.delAllButton:hover {
+    background-color: #c07070; /* Darker red on hover */
+    border-color: #b05050; /* Darker outline on hover */
 }
 
 .footer {
@@ -162,25 +207,114 @@ body{
 
 }
 
-#home {
-	padding-top: 60px;
+/* #home is no longer the main flex container for cards/numbers */
+/* Styles for the new two-column layout */
+#main-content-area {
+    display: flex;
+    width: 95%; /* Use most of the page width */
+    margin-top: 20px; /* Spacing from controls */
+    padding-top: 10px; /* Replaces part of old #home padding-top */
 }
+
+#bingo-numbers-panel {
+    width: 30%; /* Bingo numbers on the left */
+    padding-right: 15px; /* Space between panels */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Stack mode text and numbers */
+    align-items: center; /* Center content like modeText */
+}
+
+#bingo-numbers-panel .bingoBtn {
+    margin: 2px; /* Small margin for number buttons */
+}
+
+.bingo-buttons-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center; /* Center the buttons within the container */
+	width: 100%; /* Take full width of its parent panel */
+}
+
+
+#cards-panel {
+    width: 70%; /* Cards on the right */
+    display: flex;
+    flex-wrap: wrap; /* Allow cards to wrap */
+    justify-content: flex-start; /* Align cards to the start of the panel */
+    align-content: flex-start; /* Align wrapped lines to the start */
+    box-sizing: border-box;
+}
+
 
 #controls {
     display: flex;
     flex-direction: column; /* 垂直排列輸入框 */
+    align-items: center; /* Center controls content */
     gap: 10px; /* 每個輸入框之間的間距 */
     margin: 20px;
+    padding: 20px; /* Increased padding */
+    background-color: rgba(255, 255, 255, 0.85); /* Slight background for readability */
+    border-radius: 10px; /* Rounded corners for the main controls box */
+    border: 1px solid #ccc; /* Outline for the main controls box */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
 }
 
-#controls div {
+#controls div { /* Styling for each label-input pair container */
     display: flex;
     align-items: center;
     gap: 10px; /* 標籤與輸入框之間的間距 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 90%; /* Make them take up most of the controls width */
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#controls div:hover {
+    border-color: #aaa;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+#controls label {
+    min-width: 100px; /* Reduced min-width to give more space to input */
+    text-align: right;
+    font-size: 0.9em; /* Slightly smaller font for labels if needed */
+}
+
+#controls input[type="number"],
+#controls input[type="text"] {
+    flex-grow: 1; /* Allow input to take remaining space */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+    min-width: 0; /* Allow input to shrink if necessary */
+}
+
+#controls input[type="number"]:focus,
+#controls input[type="text"]:focus {
+    border-color: #4CAF50; /* Green border on focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
 #controls button {
-    align-self: flex-start; /* 將按鈕對齊到容器左側 */
+    align-self: center; /* 將按鈕對齊到容器中心 */
+    padding: 10px 20px; /* Increased padding */
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: 2px solid #388E3C; /* Outline */
+    border-radius: 20px; /* Oval shape */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    font-size: 1em;
+}
+#controls button:hover {
+	background-color: #45a049; /* Darker green */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border-color: #2E7D32; /* Darker outline on hover */
 }
 
 .okButton, .delAllButton {

@@ -22,7 +22,26 @@ function btnClick(){
 }
 
 function createBingoBall(){
-	 modeText = document.createElement('div');
+	// Create and append totalCard text first if cards exist
+	if (cards.length > 0 && bingoNumbersPanelDiv) {
+		var totalCard = document.createElement('div');
+		totalCard.className = 'totalCard'; // Add a class for potential styling
+		totalCard.innerText = "卡片總數 " + cards.length + " 張，";
+		if(cards.length <= 5)
+			totalCard.innerText += "  買那麼少，你不會中。"
+		else if(cards.length > 5 && cards.length < 10)
+			totalCard.innerText += "  專心吃你的飯，你不會中。"
+		else if(cards.length >= 10 && cards.length < 20)
+			totalCard.innerText += "  唉唷 砸超過500，但你還是不會中。"
+		else if(cards.length >= 20 && cards.length < 25)
+			totalCard.innerText += "  嘖嘖 砸超過1000，謝謝你捐錢出來給大家花。"
+		else
+			totalCard.innerText += "  凱子。"
+		bingoNumbersPanelDiv.appendChild(totalCard);
+	}
+
+	modeText = document.createElement('div'); // modeText is already declared globally, this might be an issue.
+										  // Assuming it's intended to be a local var or re-assigned.
 	if(!newCard){
 		modeText.className = 'modeText red';
 		modeText.innerText = "對獎模式";
@@ -30,30 +49,30 @@ function createBingoBall(){
 		modeText.className = 'modeText';
 		modeText.innerText = "新增卡片";
 	}
-	homeDiv.appendChild(modeText);
+	// Ensure bingoNumbersPanelDiv is available before appending
+	if (bingoNumbersPanelDiv) {
+		bingoNumbersPanelDiv.appendChild(modeText);
 
-	var itemPerLine = 10;
-	for(var index = bingoStart ; index <= bingoEnd ; index++)
-	{
-		 var obj = document.createElement('input');
-		 obj.type = 'button';
-		 obj.className = 'bingoBtn';
-		 obj.value = index;
-		 obj.onclick = btnClick;
+		const bingoButtonsContainer = document.createElement('div');
+		bingoButtonsContainer.className = 'bingo-buttons-container'; // Add a class for styling
+		bingoNumbersPanelDiv.appendChild(bingoButtonsContainer);
 
-		 homeDiv.appendChild(obj);
+		var itemPerLine = 5; // Changed to 5 items per line
+		for(var i = bingoStart ; i <= bingoEnd ; i++) // Changed loop variable
+		{
+			 var obj = document.createElement('input');
+			 obj.type = 'button';
+			 obj.className = 'bingoBtn';
+			 obj.value = i;
+			 obj.onclick = btnClick;
 
-		 if(index % itemPerLine == 0)
-			homeDiv.appendChild(document.createElement('br'));
-		else if(index % 5 == 0){
-			var space = document.createElement('span')
-			space.innerHTML = '&nbsp;&nbsp;';
-			homeDiv.appendChild(space);
+			 bingoButtonsContainer.appendChild(obj);
+
+			 if(i % itemPerLine == 0 && i !== bingoEnd) 
+				bingoButtonsContainer.appendChild(document.createElement('br'));
 		}
 	}
-
-	homeDiv.appendChild(document.createElement('br'));
-	homeDiv.appendChild(document.createElement('hr'));
+	// No longer adding <br> and <hr> here as layout is handled by CSS flex/grid
 }
 
 function bingoBallSelect(ball){
@@ -277,21 +296,10 @@ function checkBingoLine(card) {
 }
 
 function createBingoCard() {
-	var totalCard = document.createElement('div');
-	totalCard.className = 'totalCard';
-	totalCard.innerText = "卡片總數 " + cards.length + " 張，";
-	if(cards.length <= 5)
-		totalCard.innerText += "  買那麼少，你不會中。"
-	else if(cards.length > 5 && cards.length < 10)
-		totalCard.innerText += "  專心吃你的飯，你不會中。"
-	else if(cards.length >= 10 && cards.length < 20)
-		totalCard.innerText += "  唉唷 砸超過500，但你還是不會中。"
-	else if(cards.length >= 20 && cards.length < 25)
-		totalCard.innerText += "  嘖嘖 砸超過1000，謝謝你捐錢出來給大家花。"
-	else
-		totalCard.innerText += "  凱子。"
+	// The totalCard text is now created in createBingoBall.
+	// This function will now only create the individual card elements.
 
-	homeDiv.appendChild(totalCard);
+	if (!cardsPanelDiv) return; // Ensure cardsPanelDiv exists
 
 	for(var index = 0 ; index < cards.length ; index++){
 		var card = cards[index];
@@ -300,20 +308,24 @@ function createBingoCard() {
 		const cardHeight = card.height || (card.value ? card.value.length : 0);
 		const cardWidth = card.width || (card.value && card.value[0] ? card.value[0].length : 0);
 
-		// Dynamically initialize card.booleans
+		// Dynamically initialize card.booleans, accounting for wildcards
 		card.booleans = [];
 		if (cardHeight > 0 && cardWidth > 0) {
-			for (let i = 0; i < cardHeight; i++) {
-				card.booleans.push(new Array(cardWidth).fill(false));
+			for (let r = 0; r < cardHeight; r++) {
+				let rowBooleans = [];
+				for (let c = 0; c < cardWidth; c++) {
+					// If the card value at [r][c] is 'X', it's a wildcard, so it's initially true (matched)
+					rowBooleans.push(card.value[r][c] === 'X');
+				}
+				card.booleans.push(rowBooleans);
 			}
 		} else {
-			// Handle case of invalid/zero dimensions if necessary, though strToCard should prevent this.
 			card.booleans = [[false]]; // Minimal fallback
 		}
 
 		var cardContainer = document.createElement('div');
 		cardContainer.className = 'cardContainer';
-		homeDiv.appendChild(cardContainer);
+		if (cardsPanelDiv) cardsPanelDiv.appendChild(cardContainer);
 		card.rootNode = cardContainer;
 
 		card.bingoNums = [];
@@ -358,10 +370,11 @@ function createBingoCard() {
 				}
 				bingoNum.className = 'bingoNum ' + colorClass;
 				
-				if (card.value && card.value[y] && typeof card.value[y][x] !== 'undefined') {
-					bingoNum.innerText = card.value[y][x];
-				} else {
-					bingoNum.innerText = ''; // Or some placeholder if data is missing
+				const cellValue = (card.value && card.value[y] && typeof card.value[y][x] !== 'undefined') ? card.value[y][x] : '';
+				bingoNum.innerText = cellValue || '--';
+
+				if (cellValue === 'X') {
+					bingoNum.className += ' wildcard on'; // Wildcards are always 'on' and have special style
 				}
 				cardContainer.appendChild(bingoNum);
 				card.bingoNums[y].push(bingoNum);
@@ -384,7 +397,7 @@ function createNewBingoCard() {
 
 	var cardContainer = document.createElement('div');
 	cardContainer.className = 'cardContainer new';
-	homeDiv.appendChild(cardContainer);
+	if (cardsPanelDiv) cardsPanelDiv.appendChild(cardContainer); // Append to cards panel
 	newCard.rootNode = cardContainer;
 
 	newCard.bingoNums = [];
@@ -531,7 +544,7 @@ function confirmAddAllCards() {
         previewCards = []; // Clear the preview cards array (defined in index.html)
         
         // Clear the visual preview cards from the DOM
-        const newCardContainers = document.querySelectorAll('#home .cardContainer.new');
+        const newCardContainers = document.querySelectorAll('#cards-panel .cardContainer.new'); // Updated selector
         newCardContainers.forEach(container => container.remove());
         
         location.reload();
@@ -582,15 +595,27 @@ function confirmAdd(){
 };
 
 function addCard(){
-	document.body.removeChild(rootDiv);
+	// rootDiv is the main container for bingo balls/cards, not body.
+	// If rootDiv is meant to be removed, ensure it's the correct one.
+	// For now, let's assume we are clearing the content panels.
+	// document.body.removeChild(rootDiv); // This seems too drastic, might remove particles.js or controls
 
-	while (homeDiv.hasChildNodes()) {
-		homeDiv.removeChild(homeDiv.lastChild);
+	if (bingoNumbersPanelDiv) {
+		while (bingoNumbersPanelDiv.hasChildNodes()) {
+			bingoNumbersPanelDiv.removeChild(bingoNumbersPanelDiv.lastChild);
+		}
 	}
+	if (cardsPanelDiv) {
+		while (cardsPanelDiv.hasChildNodes()) {
+			cardsPanelDiv.removeChild(cardsPanelDiv.lastChild);
+		}
+	}
+	// If rootDiv itself needs clearing (e.g. it held old structure), do it here.
+    // However, createBingoBall and createNewBingoCard now append to specific panels.
 
 	newCard = true;
-	createBingoBall();
-	createNewBingoCard();
+	createBingoBall(); // This will now populate bingoNumbersPanelDiv
+	createNewBingoCard(); // This will now populate cardsPanelDiv
 }
 
 function strToCard(str){

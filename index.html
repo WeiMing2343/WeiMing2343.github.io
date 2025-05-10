@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="icon" href="./ATEN-01.webp">
+    <link rel="icon" href="./bingo.webp">
     <title>賓果對獎</title>
     <link type="text/css" rel="stylesheet" href="normalize.css" />
     <link type="text/css" rel="stylesheet" href="bingo.css" />
@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=490, height=device-height, minimum-scale=0.1, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
+    <div id="particles-js"></div> <!-- particles.js container -->
     <div id="root"></div>
     <div id="controls">
         <div>
@@ -22,18 +23,30 @@
         </div>
         <div>
             <label for="numbers">數字 (用空格分隔):</label>
-            <input type="text" id="numbers" placeholder="例如: 5 15 26 48 31">
+            <input type="text" id="numbers" placeholder="例如: 5 15 X 48 31">
+        </div>
+        <div style="font-size: 0.8em; color: #555; text-align: center; margin-top: -5px; margin-bottom: 10px;">
+            (提示: 輸入 'X' 可作為任意數字)
         </div>
         <button onclick="generateCustomCard()">生成卡片</button>
     </div>
     <button class='okButton' onclick='confirmAddAllCards()'>完成所有卡片</button>
     <button class='delAllButton' onclick='clearCard()'>刪除所有卡片</button>
-    <div id='home'></div>
+    
+    <div id="main-content-area">
+        <div id="bingo-numbers-panel"></div>
+        <div id="cards-panel"></div>
+    </div>
+
     <footer class="footer">
-        <img src="./ATEN-02.jpg" class='aten'>
+        <img src="./bingo.png" class='aten'>
     </footer>
 
     <script>
+        // Global references to the new panels
+        let bingoNumbersPanelDiv;
+        let cardsPanelDiv;
+
         function generateCustomCard() {
             const width = parseInt(document.getElementById('width').value) || 5;
             const height = parseInt(document.getElementById('height').value) || 5;
@@ -52,7 +65,12 @@
                 let index = 0;
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
-                        currentPreviewCard.value[y][x] = numbers[index++] || '';
+                        let val = numbers[index++];
+                        if (val && val.toLowerCase() === 'x') {
+                            currentPreviewCard.value[y][x] = 'X'; // Store 'X' for wildcard
+                        } else {
+                            currentPreviewCard.value[y][x] = val || '';
+                        }
                     }
                 }
             }
@@ -61,7 +79,7 @@
             cardContainer.className = 'cardContainer new';
             cardContainer.style.width = (width * 45) + 'px';
             cardContainer.style.height = (height * 45 + 50) + 'px';
-            homeDiv.appendChild(cardContainer);
+            cardsPanelDiv.appendChild(cardContainer); // Append to cards panel
             currentPreviewCard.rootNode = cardContainer; // Store the DOM element
 
             currentPreviewCard.bingoNums = [];
@@ -83,6 +101,7 @@
                     // Generic color class assignment
                     const colorIndex = (y + x) % 5; // Cycle through 5 colors
                     let colorClass = '';
+                    const cellValue = currentPreviewCard.value[y][x];
                     switch (colorIndex) {
                         case 0: colorClass = 'bng-pink'; break;
                         case 1: colorClass = 'bng-green'; break;
@@ -91,7 +110,12 @@
                         case 4: colorClass = 'bng-blue'; break;
                     }
                     bingoNum.className = 'bingoNum ' + colorClass;
-                    bingoNum.innerText = currentPreviewCard.value[y][x] || '--';
+                    if (cellValue === 'X') {
+                        bingoNum.innerText = 'X';
+                        bingoNum.className += ' wildcard'; // Add a class for styling wildcards
+                    } else {
+                        bingoNum.innerText = cellValue || '--';
+                    }
                     cardContainer.appendChild(bingoNum);
                     currentPreviewCard.bingoNums[y].push(bingoNum);
                 }
@@ -101,7 +125,7 @@
             cardTitle.focus();
         }
 
-        homeDiv = document.getElementById('home');
+        // homeDiv = document.getElementById('home'); // No longer the primary container for balls/cards
         rootDiv = document.getElementById('root');
         var previewCards = []; // Array to store preview cards
         var cards = [];
@@ -137,7 +161,132 @@
 		}
 	}
 
-	loadCard();
+	
+	// Initialize panel variables after DOM is loaded
+	document.addEventListener('DOMContentLoaded', (event) => {
+		bingoNumbersPanelDiv = document.getElementById('bingo-numbers-panel');
+		cardsPanelDiv = document.getElementById('cards-panel');
+		// homeDiv is no longer the main container for these, but other functions might still reference it.
+		// For now, let's ensure critical functions use the new panels.
+		// If homeDiv was used for other things, those need to be checked.
+		// The original loadCard() was outside DOMContentLoaded, ensure it runs after panels are assigned.
+		loadCard(); 
+	});
+
+    </script>
+    <!-- particles.js lib - https://github.com/VincentGarreau/particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#000000" // Particle color
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          },
+          "polygon": {
+            "nb_sides": 5
+          },
+          "image": {
+            "src": "img/github.svg",
+            "width": 100,
+            "height": 100
+          }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": false,
+          "anim": {
+            "enable": false,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 40,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#000000", // Line color
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 6,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 400,
+            "line_linked": {
+              "opacity": 1
+            }
+          },
+          "bubble": {
+            "distance": 400,
+            "size": 40,
+            "duration": 2,
+            "opacity": 8,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 200,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    });
     </script>
 </body>
 </html>
