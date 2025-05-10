@@ -196,17 +196,16 @@ body{
     border-color: #b05050; /* Darker outline on hover */
 }
 
-.footer {
+.footer { /* This will now style the <a> tag wrapping the image */
     position: fixed;
-    bottom: 10px; /* Adjusted for padding from edge */
-    right: 10px;  /* Adjusted for padding from edge */
-    z-index: 999; /* Below theme toggle but above most content */
-    /* width: auto; Remove fixed width to allow content to size it */
-    /* text-align: right; No longer needed if positioned absolutely */
+    top: 10px; /* Same as theme-toggle */
+    right: 50px;  /* Positioned to the left of theme-toggle (assuming theme-toggle is ~40px wide with padding) */
+    z-index: 1000; 
+    display: block; /* Good for positioning an <a> tag */
 }
 
-.footer img.aten { /* More specific selector for the image */
-    width: 50px; /* Fixed size for better control, adjust as needed */
+.footer img.aten { 
+    width: 30px; /* Adjust size as needed for top-right corner */
     height: auto;
     display: block; /* Helps with some layout quirks of images in links */
 }
@@ -443,13 +442,13 @@ footer.footer {
         width: 90%; /* Make controls wider on mobile */
     }
 
-    .aten {
-        width: 40px; /* Slightly smaller for mobile, adjust as needed */
+    .aten { /* This class is on the img inside the footer link */
+        width: 30px; /* Consistent size for mobile */
     }
-    .footer { /* Adjust footer position for mobile if needed */
-        bottom: 10px;
-        left: 10px; /* Move to bottom-left on mobile */
-        right: auto; /* Remove right positioning */
+    .footer { /* Ensure it stays top-right on mobile too, adjust 'right' if needed to avoid overlap */
+        top: 10px;
+        right: 50px; /* Keep consistent or adjust if theme toggle size changes on mobile */
+        /* Remove bottom and left positioning from previous mobile style */
     }
 }
 
