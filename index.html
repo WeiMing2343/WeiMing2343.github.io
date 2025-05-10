@@ -30,7 +30,17 @@
         <div style="font-size: 0.8em; color: #555; text-align: center; margin-top: -5px; margin-bottom: 10px;">
             提示:數字填入可以先使用google 智慧相機將數值複製並貼上,輸入 'X' 可作為任意數字
         </div>
-        <button onclick="generateCustomCard()">生成卡片<img src="https://static.thenounproject.com/png/paw-icon-5554867-512.png" class="cat-paw-img" alt="Cat Paw"></button>
+        <div>
+            <label for="bingoLinesThreshold">賓果連線數:</label>
+            <select id="bingoLinesThreshold">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <button onclick="generateCustomCard()">生成卡片<img src="https://static.thenounproject.com/png/paw-icon-7534296-512.png" class="cat-paw-img" alt="Cat Paw"></button>
     </div>
     <button id="theme-toggle"><i class="fas fa-moon"></i></button> 
     <button class='okButton' onclick='confirmAddAllCards()'>完成所有卡片<span class="dog-paw"></span></button>
@@ -290,6 +300,59 @@
 
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
+        const bingoLinesThresholdSelect = document.getElementById('bingoLinesThreshold');
+
+        // Function to apply and save bingo threshold
+        const applyAndSaveThreshold = (value) => {
+            let newThreshold = parseInt(value, 10);
+            if (isNaN(newThreshold) || newThreshold < 1 || newThreshold > 5) {
+                newThreshold = 3; // Default if invalid
+            }
+            bingoThreshold = newThreshold; // Update global JS variable (defined in bingo.js)
+            localStorage.setItem('bingoThreshold', bingoThreshold.toString());
+            if (bingoLinesThresholdSelect) { // Update dropdown display
+                bingoLinesThresholdSelect.value = bingoThreshold.toString();
+            }
+        };
+        
+        // Load and apply stored threshold on page load
+        const storedThreshold = localStorage.getItem('bingoThreshold');
+        applyAndSaveThreshold(storedThreshold || "3"); // Use stored or default to 3
+
+        if (bingoLinesThresholdSelect) {
+            bingoLinesThresholdSelect.addEventListener('change', (event) => {
+                applyAndSaveThreshold(event.target.value);
+                // Re-check cards if game is active and numbers are selected
+                // This ensures immediate feedback if threshold changes mid-game
+                if (!newCard && cards.length > 0) { 
+                    let anyBingo = false;
+                    let winningCardsInfo = [];
+                    cards.forEach(card => {
+                        // Ensure card is not already in completed panel before re-checking
+                        if (!completedCardsPanelDiv || !completedCardsPanelDiv.contains(card.rootNode)) {
+                            const lines = checkBingoLine(card);
+                            if (lines >= bingoThreshold) {
+                                winningCardsInfo.push(card.no);
+                                anyBingo = true;
+                            }
+                        }
+                    });
+                    if (anyBingo) {
+                         setTimeout(function(){
+                            alert("！！！賓果！！！\n卡片號碼: " + winningCardsInfo.join(', ') + "\n記得請WeiMing喝飲料!");
+                            winningCardsInfo.forEach(cardNo => {
+                                const winningCard = cards.find(c => c.no === cardNo);
+                                if (winningCard && completedCardsPanelDiv && winningCard.rootNode) {
+                                     if (winningCard.rootNode.parentNode !== completedCardsPanelDiv) {
+                                        completedCardsPanelDiv.appendChild(winningCard.rootNode);
+                                    }
+                                }
+                            });
+                        }, 100); // Short delay to allow UI to update from checkBingoLine
+                    }
+                }
+            });
+        }
 
         // Function to apply the stored theme or default to light
         const applyTheme = () => {
@@ -384,7 +447,7 @@
         "line_linked": {
           "enable": true,
           "distance": 150,
-          "color": "#000000", // Line color
+          "color": "#9370DB", // MediumPurple line color
           "opacity": 0.4,
           "width": 1
         },

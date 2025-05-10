@@ -1,6 +1,7 @@
 
 var bingoStart = 1;
 var bingoEnd = 70;
+var bingoThreshold = 3; // Default bingo threshold
 
 
 function btnClick(){
@@ -116,7 +117,7 @@ function bingoBallSelect(ball){
     for(var idx = 0 ; idx < cards.length ; idx++){
         var card = cards[idx];
         var lines = checkBingoLine(card); // checkBingoLine now returns the number of lines
-        if (lines >= 3) {
+        if (lines >= bingoThreshold) { // Use bingoThreshold
             winningCardsInfo.push(card.no);
             // Visual updates for bingo are still handled in checkBingoLine
         }
@@ -236,13 +237,13 @@ function checkBingoLine(card) {
     // Or, a single full line could be "Bingo" for smaller cards.
     // The user's request was "6個數字同一列或同一行或斜的連線才算連線" (a line is a full line).
     // The distinction between "連線" (line) and "賓果" (Bingo!) is important.
-    // Let's say 1 or 2 lines is "連線", and 3 or more is "賓果！" as per original logic.
+    // Let's say 1 or 2 lines is "連線", and bingoThreshold or more is "賓果！"
 
     if (card.cardTitle) { // Ensure cardTitle element exists
         if (line == 0) {
             card.cardTitle.innerText = card.no;
         } else {
-            if (line < 3) { 
+            if (line < bingoThreshold) { // Use bingoThreshold
                 card.cardTitle.innerText = card.no + '  -  ' + line + ' 連線'; // Added space
             } else {
                 card.cardTitle.innerText = card.no + '  賓果！';
@@ -251,7 +252,7 @@ function checkBingoLine(card) {
     }
 
     if (card.rootNode && card.bingoNums) { // Ensure rootNode and bingoNums exist
-        if (line >= 3) { // BINGO!!! threshold
+        if (line >= bingoThreshold) { // BINGO!!! threshold - Use bingoThreshold
             card.rootNode.className = 'cardContainer on';
             if (card.cardTitle) card.cardTitle.className = 'cardTitle on';
             // Dynamically adjust container height for taller "Bingo!" title (40px vs 20px default)
