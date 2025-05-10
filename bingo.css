@@ -325,3 +325,41 @@ body{
 footer.footer {
     margin-top: 20px;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+    #main-content-area {
+        flex-direction: column;
+        align-items: center; /* Center items in column view */
+    }
+
+    #bingo-numbers-panel,
+    #completed-cards-panel,
+    #cards-panel {
+        width: 100%; /* Full width for panels in column layout */
+        padding-right: 0; /* Remove right padding if any */
+        margin-bottom: 20px; /* Add some space between stacked panels */
+    }
+
+    #bingo-numbers-panel {
+        order: 1; /* Prize checking mode first */
+    }
+    #completed-cards-panel {
+        order: 2; /* Completed cards second */
+        display: flex; /* Ensure it's a flex container for cards */
+        flex-wrap: wrap;
+        justify-content: center; /* Center cards within this panel */
+    }
+    #cards-panel {
+        order: 3; /* Active cards last */
+        justify-content: center; /* Center active cards as well */
+    }
+
+    #controls {
+        width: 90%; /* Make controls wider on mobile */
+    }
+
+    .aten {
+        width: 15%; /* Adjust image size for mobile if needed */
+    }
+}

@@ -35,6 +35,7 @@
     
     <div id="main-content-area">
         <div id="bingo-numbers-panel"></div>
+        <div id="completed-cards-panel"></div>
         <div id="cards-panel"></div>
     </div>
 
@@ -46,6 +47,7 @@
         // Global references to the new panels
         let bingoNumbersPanelDiv;
         let cardsPanelDiv;
+        let completedCardsPanelDiv;
 
         function generateCustomCard() {
             const width = parseInt(document.getElementById('width').value) || 5;
@@ -166,6 +168,7 @@
 	document.addEventListener('DOMContentLoaded', (event) => {
 		bingoNumbersPanelDiv = document.getElementById('bingo-numbers-panel');
 		cardsPanelDiv = document.getElementById('cards-panel');
+		completedCardsPanelDiv = document.getElementById('completed-cards-panel');
 		// homeDiv is no longer the main container for these, but other functions might still reference it.
 		// For now, let's ensure critical functions use the new panels.
 		// If homeDiv was used for other things, those need to be checked.

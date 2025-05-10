@@ -257,6 +257,11 @@ function checkBingoLine(card) {
                 alert("！！！賓果！！！\n記得請WeiMing喝飲料!");
             }, 500);
 
+            // Move the card to the completed panel
+            if (completedCardsPanelDiv && card.rootNode) {
+                completedCardsPanelDiv.appendChild(card.rootNode);
+            }
+
         } else { // Not a "Bingo!" (less than 3 lines)
             card.rootNode.className = 'cardContainer'; // Default container class
             // Reset container height to normal title size (20px)
