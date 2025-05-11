@@ -218,7 +218,7 @@ body{
 #main-content-area {
     display: flex;
     width: 95%; /* Use most of the page width */
-    margin-top: 20px; /* Spacing from controls */
+    margin-top: 5px; /* Spacing from controls */
     padding-top: 10px; /* Replaces part of old #home padding-top */
 }
 
@@ -258,7 +258,7 @@ body{
     flex-direction: column; /* 垂直排列輸入框 */
     align-items: center; /* Center controls content */
     gap: 10px; /* 每個輸入框之間的間距 */
-    margin: 20px;
+    margin: 0px 20px 20px 20px;
     padding: 20px; /* Increased padding */
     background-color: rgba(255, 255, 255, 0.85); /* Slight background for readability */
     border-radius: 10px; /* Rounded corners for the main controls box */
@@ -405,7 +405,7 @@ body{
 
 
 .okButton, .delAllButton {
-    margin: 10px 5px; /* Add top/bottom and left/right margin */
+    margin: 0px 5px 10px 5px; /* Add top/bottom and left/right margin */
 }
 
 footer.footer {
