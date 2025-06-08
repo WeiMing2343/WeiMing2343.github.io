@@ -7,3 +7,4 @@ https://WeiMing2343.github.io/
 - 中獎提醒（自由選定練線線條數）
 - 卡片內容儲存在local storage
 - 針對手機螢幕設計UI大小
+- 支援深色模式，讓你在春酒or尾牙使用時不會太亮
