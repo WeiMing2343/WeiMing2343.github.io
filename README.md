@@ -8,8 +8,6 @@ This is a simple online bingo prize checking program designed to provide a conve
 
 ## 功能特色 (Features)
 
-### 繁體中文 (Traditional Chinese)
-
 - **自定賓果卡內容與大小：**
     - 您可以自由設定賓果卡的寬度 (Width) 和高度 (Height)，範圍從 1x1 到 10x10。
     - 在「數字」欄位輸入您想要的數字，用空格分隔。
@@ -33,7 +31,7 @@ This is a simple online bingo prize checking program designed to provide a conve
     - 可以點擊每張卡片右上角的 'X' 按鈕單獨刪除某張卡片。
     - 點擊「刪除所有卡片」按鈕可以清除所有已儲存的卡片。
 
-### English
+
 
 - **Customize Bingo Card Content and Size:**
     - You can freely set the Width and Height of the bingo card, ranging from 1x1 to 10x10.
@@ -60,8 +58,6 @@ This is a simple online bingo prize checking program designed to provide a conve
 
 ## 如何使用 (How to Use)
 
-### 繁體中文 (Traditional Chinese)
-
 1.  開啟網頁：[https://WeiMing2343.github.io/](https://WeiMing2343.github.io/)
 2.  **新增卡片：**
     - 在控制面板中設定「寬度」、「高度」和「數字」。
@@ -80,7 +76,6 @@ This is a simple online bingo prize checking program designed to provide a conve
 5.  **切換模式：**
     - 點擊月亮/太陽圖標按鈕可以切換深色/淺色模式。
 
-### English
 
 1.  Open the webpage: [https://WeiMing2343.github.io/](https://WeiMing2343.github.io/)
 2.  **Add Cards:**
