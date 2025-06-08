@@ -31,7 +31,7 @@ This is a simple online bingo prize checking program designed to provide a conve
     - 可以點擊每張卡片右上角的 'X' 按鈕單獨刪除某張卡片。
     - 點擊「刪除所有卡片」按鈕可以清除所有已儲存的卡片。
 
-
+------------------------------------------------------------------------------------------------------
 
 - **Customize Bingo Card Content and Size:**
     - You can freely set the Width and Height of the bingo card, ranging from 1x1 to 10x10.
@@ -76,6 +76,7 @@ This is a simple online bingo prize checking program designed to provide a conve
 5.  **切換模式：**
     - 點擊月亮/太陽圖標按鈕可以切換深色/淺色模式。
 
+------------------------------------------------------------------------------------------------------
 
 1.  Open the webpage: [https://WeiMing2343.github.io/](https://WeiMing2343.github.io/)
 2.  **Add Cards:**
